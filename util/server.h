@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "sock.h"
+#include "session.h"
 
 namespace oldschler {
 

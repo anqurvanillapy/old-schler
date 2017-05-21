@@ -3,20 +3,21 @@ namespace oldschler {
 server::server(const std::string& host, short port)
     : listen_(host, port)
 {
-    listen_.sock_bind();
-    listen_.sock_listen(1024);
+    listen_.bind();
+    listen_.listen(1024);
     do_accept();
 }
 
 void
 server::do_accept()
 {
-    std::string greetings = "Hello, world!";
-    oldschler::sock conn{listen_.sock_accept()};
+    for (;;) {
+        session sesh{listen_.accept()};
+        std::thread t{sesh};
+        t.detach();
+    }
 
-    conn.sock_write(greetings.c_str(), 14);
-    conn.sock_close();
-    listen_.sock_close();
+    listen_.close();
 }
 
 } /* namespace oldschler */
