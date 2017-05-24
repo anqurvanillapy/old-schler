@@ -11,8 +11,16 @@ namespace oldschler {
 
 class session {
 public:
-    session(int sockfd) : conn_(sockfd) { /* nop */ }
+    explicit session(int sockfd) : conn_{sockfd} { /* nop */ }
     ~session() { /* nop */ }
+
+    // Copy.
+    session(const session&) = delete;
+    void operator=(const session&) = delete;
+
+    // Move.
+    session(session&& s) { *this = std::move(s); }
+    session& operator=(session&& s) noexcept;
 
     void operator()();
 private:

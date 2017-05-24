@@ -8,12 +8,19 @@ server::server(const std::string& host, short port)
     do_accept();
 }
 
+server&
+server::operator=(server&& s) noexcept
+{
+    listen_ = std::move(s.listen_);
+    return *this;
+}
+
 void
 server::do_accept()
 {
     for (;;) {
         session sesh{listen_.accept()};
-        std::thread t{sesh};
+        std::thread t{std::move(sesh)};
         t.detach();
     }
 
